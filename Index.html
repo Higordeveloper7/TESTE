@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gerador de Sensi PRO</title>
+
+<style>
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,sans-serif;
+}
+
+body{
+    background:#080808;
+    color:#fff;
+    min-height:100vh;
+}
+
+/* CARREGAMENTO */
+#loading{
+    position:fixed;
+    inset:0;
+    background:#ffc400;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    z-index:9999;
+}
+
+.loader{
+    width:70px;
+    height:70px;
+    border:7px solid rgba(0,0,0,.2);
+    border-top-color:#000;
+    border-radius:50%;
+    animation:girar 1s linear infinite;
+}
+
+#loading h1{
+    color:#000;
+    margin-top:20px;
+    font-size:28px;
+    font-weight:900;
+}
+
+#loading p{
+    color:#111;
+    margin-top:8px;
+}
+
+@keyframes girar{
+    to{transform:rotate(360deg);}
+}
+
+/* SITE */
+.container{
+    width:92%;
+    max-width:500px;
+    margin:auto;
+    padding:30px 0;
+}
+
+.logo{
+    text-align:center;
+    margin-bottom:25px;
+}
+
+.logo h1{
+    font-size:30px;
+    color:#ffc400;
+    font-weight:900;
+}
+
+.logo span{
+    color:#fff;
+}
+
+.card{
+    background:#111;
+    border:1px solid #292929;
+    border-radius:18px;
+    padding:22px;
+    box-shadow:0 0 25px rgba(255,196,0,.08);
+}
+
+.card h2{
+    color:#ffc400;
+    margin-bottom:18px;
+}
+
+label{
+    display:block;
+    margin:15px 0 7px;
+    color:#bbb;
+    font-size:14px;
+}
+
+select{
+    width:100%;
+    padding:14px;
+    border-radius:10px;
+    border:1px solid #333;
+    background:#080808;
+    color:#fff;
+    outline:none;
+}
+
+button{
+    width:100%;
+    margin-top:22px;
+    padding:15px;
+    border:0;
+    border-radius:10px;
+    background:#ffc400;
+    color:#000;
+    font-size:16px;
+    font-weight:900;
+    cursor:pointer;
+}
+
+button:hover{
+    background:#ffd633;
+}
+
+.resultado{
+    display:none;
+    margin-top:20px;
+    background:#0b0b0b;
+    border:1px solid #ffc400;
+    border-radius:15px;
+    padding:18px;
+}
+
+.resultado h3{
+    color:#ffc400;
+    margin-bottom:15px;
+}
+
+.sensi{
+    display:flex;
+    justify-content:space-between;
+    padding:10px 0;
+    border-bottom:1px solid #222;
+}
+
+.sensi:last-child{
+    border-bottom:0;
+}
+
+.valor{
+    color:#ffc400;
+    font-weight:bold;
+}
+
+.aviso{
+    text-align:center;
+    color:#777;
+    font-size:12px;
+    margin-top:20px;
+}
+</style>
+</head>
+
+<body>
+
+<!-- TELA DE CARREGAMENTO -->
+<div id="loading">
+    <div class="loader"></div>
+    <h1>SENSI PRO</h1>
+    <p>Preparando o gerador...</p>
+</div>
+
+<div class="container">
+
+    <div class="logo">
+        <h1>⚡ SENSI <span>PRO</span></h1>
+        <p>Gerador de Sensibilidade</p>
+    </div>
+
+    <div class="card">
+        <h2>🎯 Gerar Sensi</h2>
+
+        <label>Modelo do celular</label>
+        <select id="celular">
+            <option value="poco">POCO / Xiaomi</option>
+            <option value="samsung">Samsung</option>
+            <option value="motorola">Motorola</option>
+            <option value="redmi">Redmi</option>
+            <option value="iphone">iPhone</option>
+        </select>
+
+        <label>Estilo de jogo</label>
+        <select id="estilo">
+            <option value="capa">Capa / Headshot</option>
+            <option value="rush">Rush</option>
+            <option value="precisao">Precisão</option>
+            <option value="equilibrada">Equilibrada</option>
+        </select>
+
+        <label>Nível de DPI</label>
+        <select id="dpi">
+            <option value="baixo">Baixo</option>
+            <option value="medio" selected>Médio</option>
+            <option value="alto">Alto</option>
+        </select>
+
+        <button onclick="gerarSensi()">⚡ GERAR SENSI</button>
+
+        <div class="resultado" id="resultado">
+            <h3>🔥 Sua Sensi</h3>
+
+            <div class="sensi">
+                <span>Geral</span>
+                <span class="valor" id="geral">-</span>
+            </div>
+
+            <div class="sensi">
+                <span>Ponto Vermelho</span>
+                <span class="valor" id="red">-</span>
+            </div>
+
+            <div class="sensi">
+                <span>Mira 2x</span>
+                <span class="valor" id="mira2">-</span>
+            </div>
+
+            <div class="sensi">
+                <span>Mira 4x</span>
+                <span class="valor" id="mira4">-</span>
+            </div>
+
+            <div class="sensi">
+                <span>AWM</span>
+                <span class="valor" id="awm">-</span>
+            </div>
+
+            <div class="sensi">
+                <span>Olhadinha</span>
+                <span class="valor" id="olhadinha">-</span>
+            </div>
+        </div>
+    </div>
+
+    <p class="aviso">
+        ⚠️ A configuração é uma sugestão e pode variar de acordo com o aparelho e estilo de jogo.
+    </p>
+
+</div>
+
+<script>
+window.onload = function(){
+    setTimeout(function(){
+        document.getElementById("loading").style.display = "none";
+    }, 1800);
+};
+
+function gerarSensi(){
+
+    let estilo = document.getElementById("estilo").value;
+    let dpi = document.getElementById("dpi").value;
+
+    let base;
+
+    if(estilo === "capa"){
+        base = 95;
+    } 
+    else if(estilo === "rush"){
+        base = 100;
+    }
+    else if(estilo === "precisao"){
+        base = 88;
+    }
+    else{
+        base = 93;
+    }
+
+    if(dpi === "baixo"){
+        base -= 5;
+    }
+
+    if(dpi === "alto"){
+        base += 3;
+    }
+
+    base = Math.min(100, Math.max(70, base));
+
+    document.getElementById("geral").innerText = base;
+    document.getElementById("red").innerText = Math.max(70,base-3);
+    document.getElementById("mira2").innerText = Math.max(65,base-8);
+    document.getElementById("mira4").innerText = Math.max(60,base-13);
+    document.getElementById("awm").innerText = Math.max(45,base-25);
+    document.getElementById("olhadinha").innerText = Math.min(100,base+2);
+
+    document.getElementById("resultado").style.display = "block";
+}
+</script>
+
+</body>
+</html>
